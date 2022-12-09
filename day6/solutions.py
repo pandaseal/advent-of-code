@@ -3,7 +3,7 @@ from collections import deque
 def unique(str):
     return (len(set(str)) == len(str))
 
-def parse_n_search(length, filename='input.txt'):
+def first_unique(length, filename='input.txt'):
     with open(filename) as f:
         message = deque(maxlen=length)
         i = 0
@@ -22,5 +22,5 @@ def parse_n_search(length, filename='input.txt'):
                     return i
 
 if __name__ == "__main__":
-    print("Part 1:", parse_n_search(4))
-    print("Part 2:", parse_n_search(14))
+    print("Part 1:", first_unique(4))
+    print("Part 2:", first_unique(14))
