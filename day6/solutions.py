@@ -1,28 +1,10 @@
 from collections import deque
 
-def part1():
-    length = 4
-    with open('input.txt') as f:
-        marker = deque(maxlen=length)
-        i = 0
+def unique(str):
+    return (len(set(str)) == len(str))
 
-        while True:
-            c = f.read(1)
-            if not c:
-                print("EOF")
-                break
-            
-            marker.append(c)
-            i += 1
-            
-            if len(marker) >= length:
-                if unique(marker):
-                    print("Part 1:", i)
-                    break
-
-def part2():
-    length = 14
-    with open('input.txt') as f:
+def parse_n_search(length, filename='input.txt'):
+    with open(filename) as f:
         message = deque(maxlen=length)
         i = 0
 
@@ -30,21 +12,15 @@ def part2():
             c = f.read(1)
             if not c:
                 print("EOF")
-                break
+                return -1
             
             message.append(c)
             i += 1
             
             if len(message) >= length:
                 if unique(message):
-                    print("Part 2:", i)
-                    break
-
-def unique(str):
-    if(len(set(str)) == len(str)):
-        return True
-    return False
+                    return i
 
 if __name__ == "__main__":
-    #part1()
-    part2()
+    print("Part 1:", parse_n_search(4))
+    print("Part 2:", parse_n_search(14))
