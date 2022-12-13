@@ -1,9 +1,8 @@
 from collections import defaultdict
 from itertools import accumulate
 
-# Find all of the directories with a total size of at most 100.000. What is the sum of the total sizes of those directories?
 # Comment: learned a lot by looking at others' solutions. Sometimes it do be like that.
-def part1():
+def calc_directory_sizes():
 
     dirs = defaultdict(int)
 
@@ -27,7 +26,22 @@ def part1():
                     for d in accumulate(path):
                         dirs[d] += int(size)
 
+    return dirs
+
+def main():
+    dirs = calc_directory_sizes()
+
+    # Find all of the directories with a total size of at most 100.000. 
+    # What is the sum of the total sizes of those directories?
     print("Part 1:", sum(size for size in dirs.values() if size <= 100000))
 
+    # Find the smallest directory that, if deleted, 
+    # would free up enough space on the filesystem to run the update. 
+    # What is the total size of that directory?
+    free_space = 70000000 - dirs['/']
+    needed_space = 30000000 - free_space
+    print("Part 2:", min(size for size in dirs.values() if size >= needed_space))
+
+
 if __name__ == "__main__":
-    part1()
+    main()
