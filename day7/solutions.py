@@ -1,31 +1,6 @@
 # Find all of the directories with a total size of at most 100.000. What is the sum of the total sizes of those directories?
 def part1():
     filesystem = {"/": {"files": [], "dirs": []}}
-    # eg: filesystem = {"/": { 
-    #                       "type": "dir",
-    #                       "files": [18, 52], 
-    #                       "dirs": ["a", "d"]
-    #                       },
-    #                   "/a/": {
-    #                       "type": "dir",
-    #                       "files": [],
-    #                       "dirs": []
-    #                   }
-
-    # - / (dir)
-    #   - a (dir)
-    #       - e (dir)
-    #           - i (file, size=584)
-    #       - f (file, size=29116)
-    #       - g (file, size=2557)
-    #       - h.lst (file, size=62596)
-    #   - b.txt (file, size=14848514)
-    #   - c.dat (file, size=8504156)
-    #   - d (dir)
-    #       - j (file, size=4060174)
-    #       - d.log (file, size=8033020)
-    #       - d.ext (file, size=5626152)
-    #       - k (file, size=7214296)
 
     path = [''] # current path
     print("filesystem:", filesystem)
@@ -35,6 +10,14 @@ def part1():
         for line in f:
             l = line.strip().split()
             print(line.strip())
+
+            # TODO
+            # - only add dirs when cd:ing into them
+            # - continue when line starts with 'ls' or 'dir'
+            # - use a defaultdict (collections)
+            # - try using Path from pathlib to handle the path (https://github.com/jmerle/advent-of-code-2022/blob/master/src/day07/part1.py) or accumulate from itertools (https://github.com/viliampucik/adventofcode/blob/master/2022/07.py)
+            # - use a match / case for reading the lines
+            # do pop and append for the path 
 
             if l[0] == '$': # command mode
                 #print("command mode")
