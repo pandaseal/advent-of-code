@@ -11,22 +11,18 @@ def main():
     print("Part 1:", count_visible(grid))
 
     # What is the highest scenic score possible for any tree?
-    print("Part 2:", count_scenic_score(grid))
+    print("Part 2:", count_top_scenic_score(grid))
 
 # A tree's scenic score is found by multiplying together 
 # its viewing distance in each of the four directions.
-def count_scenic_score(grid):
+def count_top_scenic_score(grid):
     size = len(grid)
     max_score = 1
 
     for x in range(1, size-1):
         for y in range(1, size-1):
-            tree = grid[x][y]
-
-            top = [grid[i][y] for i in range(x)]
-            bottom = [grid[i][y] for i in range(x+1, size)]
-            left = [grid[x][i] for i in range(y)]
-            right = [grid[x][i] for i in range(y+1, size)]
+            
+            tree, left, right, top, bottom = trees_in_question(grid, x, y)
 
             # reverse to get same distance to tree
             top.reverse()
@@ -35,6 +31,18 @@ def count_scenic_score(grid):
             max_score = max(max_score, scenic_score(tree, left, right, top, bottom))
 
     return max_score
+
+# returns the tree in question as well as
+# lists of trees in all four directions around 
+# the tree
+def trees_in_question(grid, x, y):
+
+    left = [grid[x][i] for i in range(y)]
+    right = [grid[x][i] for i in range(y+1, len(grid))]
+    top = [grid[i][y] for i in range(x)]
+    bottom = [grid[i][y] for i in range(x+1, len(grid))]
+
+    return grid[x][y], left, right, top, bottom
 
 def scenic_score(tree, left, right, top, bottom):
     directions = [left, right, top, bottom]
@@ -64,29 +72,17 @@ def count_visible(grid):
 
     for x in range(1, size-1):
         for y in range(1, size-1):
-            tree = grid[x][y]
-
-            top = [grid[i][y] for i in range(x)]
-            bottom = [grid[i][y] for i in range(x+1, size)]
-            left = [grid[x][i] for i in range(y)]
-            right = [grid[x][i] for i in range(y+1, size)]
-
+            tree, left, right, top, bottom = trees_in_question(grid, x, y)
             sum += is_visible(tree, left, right, top, bottom)
 
     return sum
 
 def is_visible(tree, left, right, top, bottom):
-    if max(left) < tree:
-        return 1
-    elif max(right) < tree:
-        return 1
-    elif max(top) < tree:
-        return 1
-    elif max(bottom) < tree:
-        return 1
-    else:
-        return 0
-
+    directions = [left, right, top, bottom]
+    for direction in directions:
+        if max(direction) < tree:
+            return 1
+    return 0
 
 if __name__ == "__main__":
     main()
