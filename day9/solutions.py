@@ -28,9 +28,8 @@ def part2():
     tail_history = set()
     tail_history.add(rope[9])
 
-    with open('ex-input.txt') as f:
+    with open('input.txt') as f:
         for line in f:
-            print(line.strip().split())
             rope, tail_history = move10knots(line.strip().split(), rope, tail_history)
 
     print("Part 2:", len(tail_history))
@@ -47,7 +46,6 @@ def move10knots(motion, rope, tail_history):
 
         tail_history.add(new_rope[-1])
         rope = new_rope.copy()
-        visualize_small(rope)
     return rope, tail_history
 
 def shortest_possible_move(target_pos, init_pos):
@@ -78,8 +76,7 @@ def possible_moves(pos):
     possible_pos.append((x+1, y-1)) # down-right
     return possible_pos
 
-
-def visualize_small(rope):
+def visualize_small_example(rope):
     grid = [['.' for _ in range(6)] for _ in range(5)]
     indexed_rope = list(zip(rope, range(len(rope))))
     indexed_rope.reverse()
@@ -91,7 +88,6 @@ def visualize_small(rope):
             grid[y][x] = str(i)
     grid.reverse()
     for line in grid:
-        #line.reverse()
         print(' '.join(line))
     print()
 
