@@ -1,5 +1,4 @@
 from math import dist, sqrt
-from operator import itemgetter
 
 def main():
     #part1()
