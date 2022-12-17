@@ -26,7 +26,7 @@ def part2():
     rope = [(0, 0) for _ in range(10)]
 
     tail_history = set()
-    tail_history.add(rope[9])
+    tail_history.add(rope[-1])
 
     with open('input.txt') as f:
         for line in f:
@@ -48,15 +48,18 @@ def move10knots(motion, rope, tail_history):
 
         tail_history.add(new_rope[-1])
         rope = new_rope.copy()
-        
+
     return rope, tail_history
 
 def shortest_possible_move(target_pos, init_pos):
+    # generate possible moves
     possible_new_pos = possible_moves(init_pos)
+
+    # placeholders
     closest_new_pos = init_pos
+    current_dist = dist(target_pos, init_pos)
 
     # measure distance to tagret for each move
-    current_dist = dist(target_pos, init_pos)
     for possible_pos in possible_new_pos:
         new_dist = dist(possible_pos, target_pos)
         if new_dist < current_dist:
