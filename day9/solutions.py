@@ -37,6 +37,8 @@ def part2():
 def move10knots(motion, rope, tail_history):
     for _ in range(int(motion[1])):
         new_rope = rope.copy()
+
+        # move head
         new_rope[0] = move(rope[0], motion[0])
 
         # move all knots below head
@@ -46,6 +48,7 @@ def move10knots(motion, rope, tail_history):
 
         tail_history.add(new_rope[-1])
         rope = new_rope.copy()
+        
     return rope, tail_history
 
 def shortest_possible_move(target_pos, init_pos):
