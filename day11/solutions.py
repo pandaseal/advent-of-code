@@ -1,52 +1,42 @@
-from collections import defaultdict
-from heapq import nlargest
+from collections import deque 
+from math import prod, lcm
 
 ITEMS, OP, NUM, DIV, A, B = range(6)
 
-def main():
-
+def part1():
     monkeys = parse_monkeys('input.txt')
-
-    #part1(monkeys)
-    part2(monkeys)
-
-def part1(monkeys):
     inspected_items = stuff_slinging_shenanigans(20, monkeys, False)
-    print("Part1:", monkey_business(inspected_items))
+    print("Part 1:", monkey_business(inspected_items))
 
-def part2(monkeys):
-    inspected_items = stuff_slinging_shenanigans(20, monkeys, True) # TODO this is too slow!
+def part2():
+    monkeys = parse_monkeys('input.txt')
+    inspected_items = stuff_slinging_shenanigans(10_000, monkeys, True)
     print("Part 2:", monkey_business(inspected_items))
 
 def stuff_slinging_shenanigans(rounds, monkeys, anxious):
-    inspected_items = defaultdict(int)
+    inspected_items = [0] * len(monkeys)
 
     for _ in range(rounds):
-        for monkey in monkeys:
-            for item in monkeys[monkey][ITEMS]:
-                worry_level = operation(item, monkeys[monkey][OP], monkeys[monkey][NUM])
+        for i, m in enumerate(monkeys):
+            while m[ITEMS]:
+                inspected_items[i] += 1
+                worry_level = operation(m[ITEMS].popleft(), m[OP], m[NUM])
+
                 if not anxious:
                     worry_level = int(worry_level/3)
-                
-                if worry_level % monkeys[monkey][DIV] == 0:
-                    throw_to = monkeys[monkey][A]
                 else:
-                    throw_to = monkeys[monkey][B]
-                monkeys[throw_to][ITEMS].append(worry_level)
+                    # genious solution by: https://github.com/viliampucik/adventofcode/blob/master/2022/11.py
+                    worry_level %= lcm(*(m[DIV] for m in monkeys))
 
-                inspected_items[monkey] += 1
-
-            monkeys[monkey][ITEMS] = []
+                if worry_level % m[DIV] == 0:
+                    monkeys[m[A]][ITEMS].append(worry_level)
+                else:
+                    monkeys[m[B]][ITEMS].append(worry_level)
 
     return inspected_items
 
-#def faster_solve():
-#    return inspected_items
-
-
 def monkey_business(inspected_items):
-    most_active = nlargest(2, list(inspected_items.values()))
-    return most_active[0]*most_active[1]
+    return prod(sorted(inspected_items)[-2:])
 
 def operation(worry_level, operator, number):
     match operator:
@@ -60,8 +50,7 @@ def operation(worry_level, operator, number):
 
 def parse_monkeys(filename):
 
-    monkeys = {}
-    monkey_nr = -1
+    monkeys = []
 
     with open(filename) as f:
         for line in f:
@@ -69,12 +58,12 @@ def parse_monkeys(filename):
 
             match l:
                 case []:
-                    monkey_nr = -1
+                    continue
                 case 'Monkey', _:
                     monkey_nr = int(l[1][0])
-                    monkeys[monkey_nr] = {}
                 case 'Starting', *_:
-                    monkeys[monkey_nr][ITEMS] = [int(i.replace(',', '')) for i in l[2:]] 
+                    items = deque([int(i.replace(',', '')) for i in l[2:]])
+                    monkeys.append([items, str, int, int, int, int])
                 case 'Operation:', _, _, _, _, 'old':
                     monkeys[monkey_nr][OP] = '**'
                     monkeys[monkey_nr][NUM] = 2
@@ -94,4 +83,5 @@ def parse_monkeys(filename):
 
 
 if __name__ == "__main__":
-    main()
+    part1()
+    part2()
