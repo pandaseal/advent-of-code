@@ -29,7 +29,7 @@ def generate_lookup():
     lookup['E'] = 26    # elevation z
     return lookup
 
-def get_index(char):
+def get_index(char, heightmap):
     for row, elements in enumerate(heightmap):
         col  = [index for (index, item) in enumerate(elements) if item == char]
         if col != []:
@@ -52,9 +52,8 @@ def bfs(adjacency_list, start, end):
                 visited.add(neighbor)
                 queue.append((neighbor, dist+1))
     return -1
-    
 
-if __name__ == "__main__":
+def part_one():
     filename = 'input.txt'
 
     heightmap = []
@@ -65,8 +64,8 @@ if __name__ == "__main__":
     
     height_lookup = generate_lookup()
 
-    start = get_index('S')
-    end = get_index('E')
+    start = get_index('S', heightmap)
+    end = get_index('E', heightmap)
 
     # adjacency list:
     # - coordinates/ID,
@@ -81,3 +80,7 @@ if __name__ == "__main__":
 
     shortest_dist = bfs(adjacency_list, start, end)
     print(shortest_dist)
+    
+
+if __name__ == "__main__":
+    part_one()
