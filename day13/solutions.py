@@ -1,4 +1,5 @@
 import ast
+from functools import cmp_to_key
 
 def in_order(left, right) -> int:
     match left, right:
@@ -43,17 +44,32 @@ def in_order(left, right) -> int:
         case list(), int():
             return in_order(left, [right])
 
-if __name__ == "__main__":
-
-    filename = 'ex-input.txt'
-    pairs_in_order = []
+def part1(filename="input.txt"):
     with open(filename) as f:
         pairs = [
             [ast.literal_eval(side) for side in pair.split("\n")] 
                  for pair in f.read().split("\n\n")
         ]
-        for i, pair in enumerate(pairs, 1):
-            match in_order(pair[0], pair[1]):
-                case 1 | 0:
-                    pairs_in_order.append(i)
-    print(sum(pairs_in_order))
+    pairs_in_order = []
+    for i, pair in enumerate(pairs, 1):
+        match in_order(pair[0], pair[1]):
+            case 1 | 0:
+                pairs_in_order.append(i)
+    print("part 1:", sum(pairs_in_order))
+
+def part2(filename="input.txt"):
+    with open(filename) as f:
+        packets = [ast.literal_eval(packet) for packet in f.read().split()]
+    packets.extend([[[2]], [[6]]])
+
+    packets = sorted(packets, key=cmp_to_key(in_order), reverse=True)
+
+    idx1 = packets.index([[2]]) +1
+    idx2 = packets.index([[6]]) +1
+    decoder = idx1 * idx2
+    print("part 2:", decoder)
+
+if __name__ == "__main__":
+
+    part1()
+    part2()
