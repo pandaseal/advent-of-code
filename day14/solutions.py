@@ -1,4 +1,5 @@
 from collections import defaultdict
+from operator import add
 
 
 def parse_paths(filename="input.txt") -> list:
@@ -26,7 +27,7 @@ def print_grid(graph):
             row += str(x)[y] + ' '
         print(row)
 
-    for y in (range(min_y, max_y+1)):
+    for y in range(min_y, max_y+1):
         row = str(y) + ' '
         for x in range(min_x, max_x+1):
             row += graph[x][y] + ' '
@@ -71,10 +72,62 @@ def get_start_graph(paths) -> defaultdict:
                     graph[x][start_y] = '#'
     return graph
 
+def within_bounds(coord, dimensions) -> bool:
+    [min_x, max_x, min_y, max_y] = dimensions
+    return min_x <= coord[0] <= max_x and min_y <= coord[1] <= max_y
+
 if __name__ == "__main__":
-    paths = parse_paths("ex-input.txt")
+    paths = parse_paths("input.txt")
+    dimensions = get_dimensions(paths)
     graph = get_start_graph(paths)
-    sand_x, sand_y = 500, 0
-    graph[sand_x][sand_y] = '+'
+    sand = [500, 0]
+    graph[sand[0]][sand[1]] = '+'
+
+    overflow = False
+    counter = 0
+    
+    while not overflow:
+        current = sand
+        at_rest = False
+        while not at_rest:
+            down = [current[0], current[1]+1]
+            if within_bounds(down, dimensions):
+                match graph[down[0]][down[1]]:
+                    case '#' | 'o':
+                        left = [current[0]-1, current[1]+1]
+                        if within_bounds(left, dimensions):
+                            match graph[left[0]][left[1]]:
+                                case '#' | 'o':
+                                    right = [current[0]+1, current[1]+1]
+                                    if within_bounds(right, dimensions):
+                                        match graph[right[0]][right[1]]:
+                                            case '#' | 'o':
+                                                at_rest = True
+                                                counter += 1
+                                                graph[current[0]][current[1]] = 'o'
+                                            case '.': # move right
+                                                current = right
+                                    else:
+                                        print("can't go right!")
+                                        print(current)
+                                        overflow = True
+                                        break
+                                case '.': # move left
+                                    current = left
+                        else:
+                            print("can't go left!")
+                            print(current)
+                            overflow = True
+                            break
+                    case '.': # move down
+                        current = down
+            else:
+                print("can't go down!")
+                print(current)
+                overflow = True
+                break
+
     print_grid(graph)
+    print("part 1:", counter)     
+    
 
