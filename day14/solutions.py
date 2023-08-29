@@ -1,6 +1,4 @@
 from collections import defaultdict
-from operator import add
-
 
 def parse_paths(filename="input.txt") -> list:
     with open(filename) as f:
@@ -19,11 +17,6 @@ def print_grid(graph):
     for y in range(0, 3):
         row = '  '
         for x in range(min_x, max_x+1):
-            '''if x % 2:
-                row += '  '
-            else:
-                row += str(x)[y] + ' '
-            '''
             row += str(x)[y] + ' '
         print(row)
 
@@ -105,27 +98,18 @@ if __name__ == "__main__":
                                                 at_rest = True
                                                 counter += 1
                                                 graph[current[0]][current[1]] = 'o'
-                                            case '.': # move right
+                                            case '.':
                                                 current = right
-                                    else:
-                                        print("can't go right!")
-                                        print(current)
-                                        overflow = True
-                                        break
-                                case '.': # move left
+                                    overflow = True
+                                    break
+                                case '.':
                                     current = left
-                        else:
-                            print("can't go left!")
-                            print(current)
-                            overflow = True
-                            break
-                    case '.': # move down
+                        overflow = True
+                        break
+                    case '.':
                         current = down
-            else:
-                print("can't go down!")
-                print(current)
-                overflow = True
-                break
+            overflow = True
+            break
 
     print_grid(graph)
     print("part 1:", counter)     
