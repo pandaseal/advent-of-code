@@ -100,16 +100,19 @@ if __name__ == "__main__":
                                                 graph[current[0]][current[1]] = 'o'
                                             case '.':
                                                 current = right
-                                    overflow = True
-                                    break
+                                    else:
+                                        overflow = True
+                                        break
                                 case '.':
                                     current = left
-                        overflow = True
-                        break
+                        else:
+                            overflow = True
+                            break
                     case '.':
                         current = down
-            overflow = True
-            break
+            else:
+                overflow = True
+                break
 
     print_grid(graph)
     print("part 1:", counter)     
